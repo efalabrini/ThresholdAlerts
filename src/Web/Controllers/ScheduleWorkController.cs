@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Server.IISIntegration;
 namespace Web.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     [Authorize(Policy = "AdminAccess")]
-    [Authorize]
     public class ScheduleWorkController : ControllerBase
     {
         private readonly TimedHostedService _timeHostedService;
@@ -17,7 +17,6 @@ namespace Web.Controllers
             _timeHostedService = timedHostedService;
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Start([FromQuery] int periodInMinutes = 15)
         {
@@ -26,7 +25,6 @@ namespace Web.Controllers
             return Ok();
         }
 
-        [Authorize]
         [HttpPost("[Action]")]
         public async Task<IActionResult> Stop()
         {

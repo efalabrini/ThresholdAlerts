@@ -17,7 +17,6 @@ namespace Web.Controllers
             _keepAliveHostedService = keepAlivetimedHostedService;
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Start([FromQuery] int periodInMinutes = 2)
         {
@@ -26,7 +25,6 @@ namespace Web.Controllers
             return Ok();
         }
 
-        [Authorize]
         [HttpPost("[Action]")]
         public async Task<IActionResult> Stop()
         {

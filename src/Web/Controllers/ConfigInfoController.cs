@@ -9,7 +9,7 @@ namespace Web.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+[Authorize(Policy = "AdminAccess")]
 public class ConfigInfoController : ControllerBase
 {
     private readonly IWebHostEnvironment _env;

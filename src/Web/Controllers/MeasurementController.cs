@@ -12,6 +12,7 @@ namespace Web.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Policy = "AdminAccess")]
 public class MeasurementController : ControllerBase
 {
     private readonly IMeasurementService _measurementService;
@@ -22,6 +23,7 @@ public class MeasurementController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public ActionResult<List<MeasurementDto>> Get()
     {
         return _measurementService.GetAll();
@@ -40,21 +42,18 @@ public class MeasurementController : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Policy = "AdminAccess")]
     [HttpGet("[action]")]
     public ActionResult<List<MeasurementWithSubscriptionsDto>> GetWithSubscriptions()
     {
         return _measurementService.GetAllWithSubscriptions();
     }
 
-    [Authorize(Policy = "AdminAccess")]
     [HttpPut("{id}/subscription")]
     public ActionResult<SubscriptionDto> PutSubscription([FromRoute] int id, [FromQuery] string email, [FromBody] PutSubscriptionRequest putSubscriptionRequest)
     {
         return SubscriptionDto.Create(_measurementService.PutSubscription(id,email,putSubscriptionRequest));
     }
 
-    [Authorize(Policy = "AdminAccess")]
     [HttpDelete("{id}/subscription")]
     public ActionResult DeleteSubscription([FromRoute] int id, [FromQuery] string email)
     {
