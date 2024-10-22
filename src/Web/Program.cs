@@ -25,9 +25,10 @@ builder.Services.AddEndpointsApiExplorer();
 
 #region Swagger config
 //builder.Services.AddSwaggerGen();
-string tenant = "thresholdalertb2c";
-string policy = "B2C_1_susi";
-string clientid = "41d5386e-6525-44b1-aebb-acb788560917";
+string instance = builder.Configuration["AzureAdB2C:Instance"]!;
+string domain = builder.Configuration["AzureAdB2C:Domain"]!;
+string policy = builder.Configuration["AzureAdB2C:SignUpSignInPolicyId"]!;
+string clientid = builder.Configuration["AzureAdB2C:ClientId"]!;
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -40,11 +41,11 @@ builder.Services.AddSwaggerGen(c =>
         {
             AuthorizationCode = new OpenApiOAuthFlow
             {
-                AuthorizationUrl = new Uri($"https://{tenant}.b2clogin.com/{tenant}.onmicrosoft.com/{policy}/oauth2/v2.0/authorize"),
-                TokenUrl = new Uri($"https://{tenant}.b2clogin.com/{tenant}.onmicrosoft.com/{policy}/oauth2/v2.0/token"),
+                AuthorizationUrl = new Uri($"{instance}/{domain}/{policy}/oauth2/v2.0/authorize"),
+                TokenUrl = new Uri($"{instance}/{domain}/{policy}/oauth2/v2.0/token"),
                 Scopes = new Dictionary<string, string>
                 {
-                    { $"https://thresholdalertb2c.onmicrosoft.com/thresholdalert-api/thresholdalert.user_access", "user Access API" }
+                    { $"https://{domain}/thresholdalert-api/thresholdalert.user_access", "user Access API" }
                 }
             }
         }
@@ -151,7 +152,7 @@ app.UseSwaggerUI(c =>
     c.OAuthClientId($"{clientid}");
     c.OAuthUsePkce();  // Recommended for B2C
     c.OAuth2RedirectUrl(oAuthRedirectUrl); // Same as the one registered in Azure B2C
-    c.OAuthScopes("https://thresholdalertb2c.onmicrosoft.com/thresholdalert-api/thresholdalert.user_access"); //Selects this scope by default.
+    c.OAuthScopes($"https://{domain}/thresholdalert-api/thresholdalert.user_access"); //Selects this scope by default.
 });
 //}
 
