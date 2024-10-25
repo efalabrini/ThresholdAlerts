@@ -3,7 +3,7 @@ A simple ASP.NET Web API example implementing Clean Architecture, using controll
 
 It uses Entity Framework as the ORM and SQLite as the database.
 
-For authorization and authentication, it is integrated with Azure B2C.
+For authorization and authentication, it is integrated with Azure AD B2C.
 
 ## Description
 The Web API is designed to register users through an email address to monitor measurements, defining both an upper and lower threshold.
