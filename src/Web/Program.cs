@@ -29,6 +29,8 @@ string instance = builder.Configuration["AzureAdB2C:Instance"]!;
 string domain = builder.Configuration["AzureAdB2C:Domain"]!;
 string policy = builder.Configuration["AzureAdB2C:SignUpSignInPolicyId"]!;
 string clientid = builder.Configuration["AzureAdB2C:ClientId"]!;
+string ApplicationIdURI = $"{domain}/{builder.Configuration["AzureAdB2C:ApplicationIdURI"]!}";
+string scope = "thresholdalert.user_access";
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -45,7 +47,7 @@ builder.Services.AddSwaggerGen(c =>
                 TokenUrl = new Uri($"{instance}/{domain}/{policy}/oauth2/v2.0/token"),
                 Scopes = new Dictionary<string, string>
                 {
-                    { $"https://{domain}/thresholdalert-api/thresholdalert.user_access", "user Access API" }
+                    { $"https://{ApplicationIdURI}/{scope}", "user Access API" }
                 }
             }
         }
@@ -62,7 +64,7 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "oauth2"
                 }
             },
-            new[] { $"https://thresholdalertb2c.onmicrosoft.com/thresholdalert-api/thresholdalert.user_access" }
+            new[] { $"https://{ApplicationIdURI}/{scope}" }
         }
     });
 });
@@ -84,11 +86,6 @@ options => { builder.Configuration.Bind("AzureAdB2C", options); });
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("UserAccess", policy =>
-        policy.RequireAssertion(context =>
-            context.User.HasClaim(c => c.Type == "http://schemas.microsoft.com/identity/claims/scope" &&
-                                       c.Value.Split(' ').Contains("thresholdalert.user_access"))));
-
     options.AddPolicy("AdminAccess", policy =>
         policy.RequireClaim("jobTitle", "admin"));
 });
@@ -130,9 +127,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(dbContextOptions => dbContex
 var app = builder.Build();
 
 #region Apply EF migrations
-using (var scope = app.Services.CreateScope())
+using (var serviceScopescope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var dbContext = serviceScopescope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     dbContext.Database.Migrate();
 }
 #endregion
@@ -142,19 +139,19 @@ using (var scope = app.Services.CreateScope())
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
+#region Swagger pipeline config
+string spaClientId = builder.Configuration["AzureAdB2C:SpaClientId"]!;
 app.UseSwagger();
-var oAuthRedirectUrl = builder.Configuration["OAuthSettings:RedirectUri"];
+var oAuthRedirectUrl = builder.Configuration["AzureAdB2C:RedirectUri"];
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-    c.OAuthClientId($"{clientid}");
+    c.OAuthClientId($"{spaClientId}");
     c.OAuthUsePkce();  // Recommended for B2C
     c.OAuth2RedirectUrl(oAuthRedirectUrl); // Same as the one registered in Azure B2C
-    c.OAuthScopes($"https://{domain}/thresholdalert-api/thresholdalert.user_access"); //Selects this scope by default.
+    c.OAuthScopes($"https://{ApplicationIdURI}/{scope}"); //Selects this scope by default.
 });
-//}
+#endregion
 
 app.UseHttpsRedirection();
 
