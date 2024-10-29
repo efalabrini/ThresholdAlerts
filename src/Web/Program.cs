@@ -30,7 +30,7 @@ string domain = builder.Configuration["AzureAdB2C:Domain"]!;
 string policy = builder.Configuration["AzureAdB2C:SignUpSignInPolicyId"]!;
 string clientid = builder.Configuration["AzureAdB2C:ClientId"]!;
 string ApplicationIdURI = $"{domain}/{builder.Configuration["AzureAdB2C:ApplicationIdURI"]!}";
-string scope = "thresholdalert.user_access";
+string scope = "default";
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
