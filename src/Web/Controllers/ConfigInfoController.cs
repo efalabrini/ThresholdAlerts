@@ -17,19 +17,23 @@ public class ConfigInfoController : ControllerBase
     private readonly TimedHostedService _timeHostedService;
     private readonly KeepAliveHostedService _keepAliveHostedService;
 
+    private readonly IConfiguration _configuration;
+
     private readonly ApplicationDbContext _dbContext;
 
     public ConfigInfoController(IWebHostEnvironment env,
      ILogger<ConfigInfoController> logger,
      TimedHostedService timeHostedService,
      ApplicationDbContext dbContext,
-     KeepAliveHostedService keepAliveHostedService)
+     KeepAliveHostedService keepAliveHostedService,
+     IConfiguration configuration)
     {
         _env = env;
         _logger = logger;
         _timeHostedService = timeHostedService;
         _dbContext = dbContext;
         _keepAliveHostedService = keepAliveHostedService;
+        _configuration = configuration;
     }
 
     [HttpGet()]
@@ -67,6 +71,8 @@ public class ConfigInfoController : ControllerBase
         result.Add("");
 
         result.Add($"Database connection string: {_dbContext.Database.GetConnectionString()}");
+
+        result.Add($"Email pass: {_configuration["EmailNotificationService:Password"] }");
 
         return result;
     }
