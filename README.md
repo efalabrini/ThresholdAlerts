@@ -58,6 +58,8 @@ classDiagram
 
 [CI/CD de una NET Web API en Azure con Github actions.](https://youtu.be/9s2GDa4Uj1k?si=2grLUnSkHu-fC1F4)
 
+[Azure B2C en una ASP NET Web API integrado con Swagger](https://youtu.be/sJQ3kBZfFPc?si=bS6qqo8dNSqJcoig)
+
 ## Projects creation
 ```
 dotnet new sln -n "ThresholdAlerts"
