@@ -22,7 +22,7 @@ const MySubscriptions = () => {
         });
         const accessToken = response.accessToken;
 
-        const apiUrl = process.env.REACT_APP_API_URL  + '/api/User/me/subscriptions';
+        const apiUrl = process.env.REACT_APP_API_URL  + 'api/User/me/subscriptions';
 
         try {
           const response = await fetch(apiUrl, {

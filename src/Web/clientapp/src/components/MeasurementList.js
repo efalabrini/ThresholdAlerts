@@ -5,7 +5,7 @@ const MeasurementList = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const apiUrl = process.env.REACT_APP_API_URL  + '/api/Measurement';
+  const apiUrl = process.env.REACT_APP_API_URL  + 'api/Measurement';
 
   console.log(apiUrl);
 
