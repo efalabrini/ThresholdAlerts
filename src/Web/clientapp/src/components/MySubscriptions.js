@@ -45,7 +45,7 @@ const MySubscriptions = () => {
       };
   
       fetchData();
-    });
+    },[]);
   
     if (loading) {
       return <p>Loading...</p>;

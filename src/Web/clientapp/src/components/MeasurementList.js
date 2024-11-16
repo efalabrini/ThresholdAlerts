@@ -26,7 +26,7 @@ const MeasurementList = () => {
     };
 
     fetchData();
-  });
+  },[]);
 
   if (loading) {
     return <p>Loading...</p>;
