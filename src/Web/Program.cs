@@ -123,6 +123,18 @@ using (var command = connection.CreateCommand())
 
 builder.Services.AddDbContext<ApplicationDbContext>(dbContextOptions => dbContextOptions.UseSqlite(connection));
 
+// Add CORS services
+string[] allowedOrigins = (builder.Configuration["Cors:AllowedOrigins"] ?? "").Split(",");
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins(allowedOrigins) // React dev server
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -154,6 +166,9 @@ app.UseSwaggerUI(c =>
 #endregion
 
 app.UseHttpsRedirection();
+
+// Use CORS
+    app.UseCors("AllowReactApp");
 
 app.UseAuthorization();
 
