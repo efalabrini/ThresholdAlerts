@@ -1,13 +1,9 @@
-import logo from './logo.svg';
 import './App.css';
 import MeasurementList from './components/MeasurementList'; // Adjust the path if necessary
 import MySubscriptions from './components/MySubscriptions';
-import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal, MsalProvider } from "@azure/msal-react";
+import { AuthenticatedTemplate, UnauthenticatedTemplate, MsalProvider } from "@azure/msal-react";
 import Typography from "@mui/material/Typography";
 import { PageLayout } from "./components/PageLayout";
-
-
-import { b2cPolicies } from "./authConfig";
 
 function App({ pca }) {
   return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { loginRequest, apiConfig } from "../authConfig";
+import { loginRequest } from "../authConfig";
 import { useMsal } from "@azure/msal-react";
 
 const MySubscriptions = () => {
@@ -45,7 +45,7 @@ const MySubscriptions = () => {
       };
   
       fetchData();
-    }, []);
+    });
   
     if (loading) {
       return <p>Loading...</p>;
