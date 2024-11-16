@@ -166,7 +166,7 @@ app.UseSwaggerUI(c =>
 #endregion
 
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
 // Use CORS
     app.UseCors("AllowReactApp");
 
