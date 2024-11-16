@@ -22,8 +22,10 @@ const MySubscriptions = () => {
         });
         const accessToken = response.accessToken;
 
+        const apiUrl = process.env.REACT_APP_API_URL  + '/api/User/me/subscriptions';
+
         try {
-          const response = await fetch('https://localhost:7078/api/User/me/subscriptions', {
+          const response = await fetch(apiUrl, {
             method: 'GET',
             headers: {
                 'Authorization' : `Bearer ${accessToken}`,
