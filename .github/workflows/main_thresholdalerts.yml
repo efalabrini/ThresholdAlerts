@@ -12,6 +12,7 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    environment: production
     env:
         CI: false
         REACT_APP_B2C_CLIENT_ID: ${{ secrets.REACT_APP_B2C_CLIENT_ID }}
