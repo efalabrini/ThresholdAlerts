@@ -14,6 +14,14 @@ jobs:
     runs-on: windows-latest
     env:
         CI: false
+        REACT_APP_B2C_CLIENT_ID: ${{ secrets.REACT_APP_B2C_CLIENT_ID }}
+        REACT_APP_B2C_AUTHORITY: ${{ secrets.REACT_APP_B2C_AUTHORITY }}
+        REACT_APP_B2C_SIGNUPSIGNINPOLICYNAME: ${{ secrets.REACT_APP_B2C_SIGNUPSIGNINPOLICYNAME }}
+        REACT_APP_B2C_EDITPROFILEPOLICYNAME: ${{ secrets.REACT_APP_B2C_EDITPROFILEPOLICYNAME }}
+        REACT_APP_B2C_SCOPES: ${{ secrets.REACT_APP_B2C_SCOPES }}
+        REACT_APP_B2C_AUTHORITYDOMAIN: ${{ secrets.REACT_APP_B2C_AUTHORITYDOMAIN }}
+        REACT_APP_B2C_URI: ${{ secrets.REACT_APP_B2C_URI }}
+        REACT_APP_API_URL: ""
 
     steps:
       - uses: actions/checkout@v4
@@ -26,16 +34,7 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
-      - name: dotnet publish
-        env:
-          REACT_APP_B2C_CLIENT_ID: ${{ secrets.REACT_APP_B2C_CLIENT_ID }}
-          REACT_APP_B2C_AUTHORITY: ${{ secrets.REACT_APP_B2C_AUTHORITY }}
-          REACT_APP_B2C_SIGNUPSIGNINPOLICYNAME: ${{ secrets.REACT_APP_B2C_SIGNUPSIGNINPOLICYNAME }}
-          REACT_APP_B2C_EDITPROFILEPOLICYNAME: ${{ secrets.REACT_APP_B2C_EDITPROFILEPOLICYNAME }}
-          REACT_APP_B2C_SCOPES: ${{ secrets.REACT_APP_B2C_SCOPES }}
-          REACT_APP_B2C_AUTHORITYDOMAIN: ${{ secrets.REACT_APP_B2C_AUTHORITYDOMAIN }}
-          REACT_APP_B2C_URI: ${{ secrets.REACT_APP_B2C_URI }}
-          REACT_APP_API_URL: ""
+      - name: dotnet publish  
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
