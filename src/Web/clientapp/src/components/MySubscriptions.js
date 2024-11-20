@@ -72,8 +72,8 @@ const MySubscriptions = () => {
             <tr key={index}>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.measurement}</td>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.measurementUnit}</td>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.lowerThreshold}</td>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.upperThreshold}</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{new Intl.NumberFormat('en-US').format(item.lowerThreshold)}</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{new Intl.NumberFormat('en-US').format(item.upperThreshold)}</td>
             </tr>
           ))}
         </tbody>

@@ -4,6 +4,7 @@ import MySubscriptions from './components/MySubscriptions';
 import { AuthenticatedTemplate, UnauthenticatedTemplate, MsalProvider } from "@azure/msal-react";
 import Typography from "@mui/material/Typography";
 import { PageLayout } from "./components/PageLayout";
+import Readings from './components/Readings';
 
 function App({ pca }) {
   return (
@@ -12,11 +13,13 @@ function App({ pca }) {
         <PageLayout>
           <AuthenticatedTemplate>
             <MeasurementList />
+            <Readings />
             <MySubscriptions />
           </AuthenticatedTemplate>
           
           <UnauthenticatedTemplate>
             <MeasurementList />
+            <Readings />
             <Typography variant="h6">
               <br/>
               <center>Please sign-in to see your subscriptions.</center>
