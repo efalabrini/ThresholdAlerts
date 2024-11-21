@@ -36,6 +36,18 @@ const Readings = () => {
     return <p>Error: {error}</p>;
   }
 
+  function formatReadAtDate(readAt) {
+    return readAt
+        ? new Intl.DateTimeFormat('en-GB', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+          }).format(new Date(readAt))
+        : '';
+}
 
   return (
     <div>
@@ -43,14 +55,11 @@ const Readings = () => {
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Measurement</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Meas.</th>
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Unit</th>
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Value</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Read at</th>
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Min</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Read at</th>
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Max</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Read at</th>
           </tr>
         </thead>
         <tbody>
@@ -58,40 +67,9 @@ const Readings = () => {
             <tr key={entity.id}>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{entity.measurement}</td>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{entity.unit}</td>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{new Intl.NumberFormat('en-US').format(entity.value)}</td>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{entity.readAt
-               ? new Intl.DateTimeFormat('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false,
-                }).format(new Date(entity.readAt))
-                : '' }
-              </td>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{new Intl.NumberFormat('en-US').format(entity.minValue)}</td>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{entity.minValueReadAt
-                ? new Intl.DateTimeFormat('en-GB', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false,
-                    }).format(new Date(entity.readAt))
-                    : '' }</td>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{new Intl.NumberFormat('en-US').format(entity.maxValue)}</td>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{entity.maxValueReadAt
-                ? new Intl.DateTimeFormat('en-GB', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false,
-                    }).format(new Date(entity.readAt))
-                    : '' }</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{new Intl.NumberFormat('en-US').format(entity.value)} <br></br> at <br></br> {formatReadAtDate(entity.readAt)}</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{new Intl.NumberFormat('en-US').format(entity.minValue)} <br></br> at <br></br> {formatReadAtDate(entity.minValueReadAt)} </td>
+              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{new Intl.NumberFormat('en-US').format(entity.maxValue)} <br></br> at <br></br> {formatReadAtDate(entity.maxValueReadAt)}</td>
             </tr>
           ))}
         </tbody>
