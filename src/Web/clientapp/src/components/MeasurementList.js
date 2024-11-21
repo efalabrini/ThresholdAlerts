@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useMsal } from "@azure/msal-react";
+import { loginRequest } from "../authConfig";
 
 const MeasurementList = () => {
 
@@ -6,6 +8,13 @@ const MeasurementList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const apiUrl = process.env.REACT_APP_API_URL  + 'api/Measurement';
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [currentId, setCurrentId] = useState(null);
+  const [thresholds, setThresholds] = useState({
+    lowerThreshold: '',
+    upperThreshold: '',
+  });
+  const { instance } = useMsal();
 
   console.log(apiUrl);
 
@@ -37,8 +46,64 @@ const MeasurementList = () => {
   }
 
   const handleAddSubscription = (id) => {
-    console.log(`Adding subscription for entity with ID: ${id}`);
-    // Perform the desired action, e.g., API call or state update
+    setCurrentId(id);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setThresholds({ lowerThreshold: '', upperThreshold: '' });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setThresholds((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async () => {
+    const { lowerThreshold, upperThreshold } = thresholds;
+
+    try {
+
+      const account = instance.getActiveAccount();
+        if (!account) {
+            throw Error("No active account! Verify a user has been signed in and setActiveAccount has been called.");
+        }
+
+      const responselog = await instance.acquireTokenSilent({
+            ...loginRequest,
+            account: account
+        })
+      const accessToken = responselog.accessToken;
+      const apiUrl = process.env.REACT_APP_API_URL  + `api/User/me/subscription?measurementId=${currentId}`;
+      const response = await fetch(
+        apiUrl,
+        {
+          method: 'PUT',
+          headers: {
+            'accept': 'text/plain',
+            'Authorization': `Bearer ${accessToken}`, // Replace with the actual token
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            lowerThreshold: Number(lowerThreshold),
+            upperThreshold: Number(upperThreshold),
+          }),
+        }
+      );
+
+      if (response.ok) {
+        alert('Subscription added successfully!');
+      } else {
+        const errorText = await response.text();
+        alert(`Failed to add subscription: ${errorText}`);
+      }
+    } catch (error) {
+      console.error('Error adding subscription:', error);
+      alert('An error occurred while adding the subscription.');
+    } finally {
+      handleCloseModal();
+    }
   };
 
   return (
@@ -68,6 +133,64 @@ const MeasurementList = () => {
           ))}
         </tbody>
       </table>
+
+      {isModalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            padding: '20px',
+            backgroundColor: 'white',
+            border: '1px solid #ddd',
+            borderRadius: '8px',
+            zIndex: 1000,
+          }}
+        >
+          <h3>Set Thresholds</h3>
+          <label>
+            Lower Threshold:
+            <input
+              type="number"
+              name="lowerThreshold"
+              value={thresholds.lowerThreshold}
+              onChange={handleInputChange}
+              style={{ margin: '10px 0', display: 'block', width: '100%' }}
+            />
+          </label>
+          <label>
+            Upper Threshold:
+            <input
+              type="number"
+              name="upperThreshold"
+              value={thresholds.upperThreshold}
+              onChange={handleInputChange}
+              style={{ margin: '10px 0', display: 'block', width: '100%' }}
+            />
+          </label>
+          <button onClick={handleSubmit} style={{ marginRight: '10px' }}>
+            Submit
+          </button>
+          <button onClick={handleCloseModal}>Cancel</button>
+        </div>
+      )}
+
+      {isModalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 999,
+          }}
+          onClick={handleCloseModal}
+        />
+      )}
+
     </div>
   );
 };
