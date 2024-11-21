@@ -12,7 +12,8 @@ public record SubscriptionDto( int Id,
     string Measurement,
     string MeasurementUnit,
     decimal? LowerThreshold,
-    decimal? UpperThreshold)
+    decimal? UpperThreshold,
+    int MeasurementId)
 {
     public static SubscriptionDto Create(Subscription entity)
     {
@@ -22,7 +23,8 @@ public record SubscriptionDto( int Id,
             entity.Measurement.Name,
             entity.Measurement.Unit,
             entity.LowerThreshold,
-            entity.UpperThreshold);
+            entity.UpperThreshold,
+            entity.Measurement.Id);
 
         return dto;
     }

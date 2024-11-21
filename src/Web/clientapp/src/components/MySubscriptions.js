@@ -54,6 +54,44 @@ const MySubscriptions = () => {
     if (error) {
       return <p>Error: {error}</p>;
     }
+
+    const handleDelete = async (measurementId) => {    
+      const account = instance.getActiveAccount();
+        if (!account) {
+            throw Error("No active account! Verify a user has been signed in and setActiveAccount has been called.");
+        }
+    
+        const response = await instance.acquireTokenSilent({
+            ...loginRequest,
+            account: account
+        });
+        const accessToken = response.accessToken;
+
+        const apiUrl = process.env.REACT_APP_API_URL  +  `api/User/me/subscription?measurementId=${measurementId}`;
+
+      try {
+        const response = await fetch(
+          apiUrl,
+          {
+            method: 'DELETE',
+            headers: {
+                'Authorization' : `Bearer ${accessToken}`,
+                'Content-type' : 'application/json'
+            }
+          }
+        );
+    
+        if (response.ok) {
+          // Optionally, update the local data to remove the deleted subscription.
+          setData((prevData) => prevData.filter((item) => item.measurementId !== measurementId));
+        } else {
+          alert("Failed to delete the subscription.");
+        }
+      } catch (error) {
+        console.error("Error deleting subscription:", error);
+        alert("An error occurred while trying to delete the subscription.");
+      }
+    };
   
     return (
     <div>
@@ -65,6 +103,7 @@ const MySubscriptions = () => {
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Unit</th>
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Lower Threshold</th>
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Upper Threshold</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -74,6 +113,14 @@ const MySubscriptions = () => {
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.measurementUnit}</td>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{new Intl.NumberFormat('en-US').format(item.lowerThreshold)}</td>
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>{new Intl.NumberFormat('en-US').format(item.upperThreshold)}</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'center' }}>
+                <button
+                  onClick={() => handleDelete(item.measurementId)}
+                  style={{ padding: '5px 10px', color: 'white', backgroundColor: 'red', border: 'none', cursor: 'pointer' }}
+                >
+                  Delete
+                </button>
+            </td>
             </tr>
           ))}
         </tbody>
