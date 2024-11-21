@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../authConfig";
 
-const MeasurementList = () => {
+const MeasurementList = ({ onSubscriptionAdded }) => {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -93,7 +93,7 @@ const MeasurementList = () => {
       );
 
       if (response.ok) {
-        alert('Subscription added successfully!');
+        onSubscriptionAdded(); // Notify App.js to reload MySubscriptions
       } else {
         const errorText = await response.text();
         alert(`Failed to add subscription: ${errorText}`);

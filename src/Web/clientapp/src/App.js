@@ -5,16 +5,24 @@ import { AuthenticatedTemplate, UnauthenticatedTemplate, MsalProvider } from "@a
 import Typography from "@mui/material/Typography";
 import { PageLayout } from "./components/PageLayout";
 import Readings from './components/Readings';
+import { useState } from 'react';
 
 function App({ pca }) {
+
+  const [reloadSubscriptions, setReloadSubscriptions] = useState(false);
+
+  const handleReloadSubscriptions = () => {
+    setReloadSubscriptions((prev) => !prev); // Toggle state to trigger re-render
+  };
+
   return (
     <div className="App">
       <MsalProvider instance={pca}>
         <PageLayout>
           <AuthenticatedTemplate>
-            <MeasurementList />
+            <MeasurementList onSubscriptionAdded={handleReloadSubscriptions} />
             <Readings />
-            <MySubscriptions />
+            <MySubscriptions key={reloadSubscriptions} />
           </AuthenticatedTemplate>
           
           <UnauthenticatedTemplate>
