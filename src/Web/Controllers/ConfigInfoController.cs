@@ -1,4 +1,5 @@
-﻿using Core.Services;
+﻿using Core.Models;
+using Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -76,4 +77,12 @@ public class ConfigInfoController : ControllerBase
 
         return result;
     }
+
+    [AllowAnonymous]
+    [HttpGet("alertservice/status")]
+    public ActionResult<AlertServiceStatusDto> GetStatus()
+    {
+        return _timeHostedService.GetStatus();
+    }
+
 }

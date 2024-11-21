@@ -47,11 +47,11 @@ const Readings = () => {
               hour12: false,
           }).format(new Date(readAt))
         : '';
-}
+  }
 
   return (
     <div>
-      <h2>Readings (Date format dd/mm/yyyy hh:mm)</h2>
+      <h2>Readings</h2>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>

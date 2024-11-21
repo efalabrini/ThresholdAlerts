@@ -1,6 +1,7 @@
 import './App.css';
 import MeasurementList from './components/MeasurementList'; // Adjust the path if necessary
 import MySubscriptions from './components/MySubscriptions';
+import AlertServiceStatus from './components/AlertServiceStatus';
 import { AuthenticatedTemplate, UnauthenticatedTemplate, MsalProvider } from "@azure/msal-react";
 import Typography from "@mui/material/Typography";
 import { PageLayout } from "./components/PageLayout";
@@ -20,12 +21,14 @@ function App({ pca }) {
       <MsalProvider instance={pca}>
         <PageLayout>
           <AuthenticatedTemplate>
+            <AlertServiceStatus />
             <MeasurementList onSubscriptionAdded={handleReloadSubscriptions} />
             <Readings />
             <MySubscriptions key={reloadSubscriptions} />
           </AuthenticatedTemplate>
           
           <UnauthenticatedTemplate>
+            <AlertServiceStatus />
             <MeasurementList />
             <Readings />
             <Typography variant="h6">

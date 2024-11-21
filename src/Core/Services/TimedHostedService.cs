@@ -1,4 +1,5 @@
 ﻿using Core.Exceptions;
+using Core.Models;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -78,5 +79,10 @@ public class TimedHostedService : IHostedService, IDisposable
         result.Add($"TimedHostedService.PeriodInMinutes: {_periodInMinutes}");
 
         return result;
+    }
+
+    public AlertServiceStatusDto GetStatus()
+    {
+        return new AlertServiceStatusDto(_IsRunning,_periodInMinutes,_startTime);
     }
 }
