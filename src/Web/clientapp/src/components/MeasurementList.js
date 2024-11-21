@@ -36,6 +36,10 @@ const MeasurementList = () => {
     return <p>Error: {error}</p>;
   }
 
+  const handleAddSubscription = (id) => {
+    console.log(`Adding subscription for entity with ID: ${id}`);
+    // Perform the desired action, e.g., API call or state update
+  };
 
   return (
     <div>
@@ -46,7 +50,7 @@ const MeasurementList = () => {
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Name</th>
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Unit</th>
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>API URL</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Field JSON Path</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Subscription</th>
           </tr>
         </thead>
         <tbody>
@@ -57,7 +61,9 @@ const MeasurementList = () => {
               <td style={{ border: '1px solid #ddd', padding: '8px' }}>
                 <a href={entity.apiUrl} target="_blank" rel="noopener noreferrer">{entity.apiUrl}</a>
               </td>
-              <td style={{ border: '1px solid #ddd', padding: '8px' }}>{entity.fieldJsonPath}</td>
+              <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'center' }}>
+                <button onClick={() => handleAddSubscription(entity.id)}>Add</button>
+              </td>
             </tr>
           ))}
         </tbody>
