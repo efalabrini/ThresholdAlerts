@@ -76,38 +76,45 @@ public class AlertService
 
         foreach (var measurement in measurements)
         {
-            _logger.LogInformation("{measurement.Name} fetch starting",measurement.Name);
-            value = await GetValueAsync(measurement);
-            _logger.LogInformation("{measurement.Name} fetch finished. Value: {value}", measurement.Name, value);
-            UpdateMeasurementReadings(measurement, value,DateTime.UtcNow);
-
-            string msg = string.Empty;
-
-            foreach (var suscription in measurement.Subscriptions)
+            try
             {
-                _logger.LogInformation("Evaluating subscription: {suscription.Email}, LowerThreshold: {suscription.LowerThreshold}, UpperThreshold: {suscription.UpperThreshold}",
-                    suscription.Email, suscription.LowerThreshold, suscription.UpperThreshold);
-                if (suscription.LowerThreshold != null)
+                _logger.LogInformation("{measurement.Name} fetch starting",measurement.Name);
+                value = await GetValueAsync(measurement);
+                _logger.LogInformation("{measurement.Name} fetch finished. Value: {value}", measurement.Name, value);
+                UpdateMeasurementReadings(measurement, value,DateTime.UtcNow);
+
+                string msg = string.Empty;
+
+                foreach (var suscription in measurement.Subscriptions)
                 {
-                    if (value < suscription.LowerThreshold)
+                    _logger.LogInformation("Evaluating subscription: {suscription.Email}, LowerThreshold: {suscription.LowerThreshold}, UpperThreshold: {suscription.UpperThreshold}",
+                        suscription.Email, suscription.LowerThreshold, suscription.UpperThreshold);
+                    if (suscription.LowerThreshold != null)
                     {
-                        msg += $"{measurement.Name} is under {suscription.LowerThreshold} {measurement.Unit} ({value}).";
+                        if (value < suscription.LowerThreshold)
+                        {
+                            msg += $"{measurement.Name} is under {suscription.LowerThreshold} {measurement.Unit} ({value}).";
+                        }
                     }
-                }
 
-                if (suscription.UpperThreshold != null)
-                {
-                    if (value > suscription.UpperThreshold)
+                    if (suscription.UpperThreshold != null)
                     {
-                        msg += $"{measurement.Name} is above {suscription.UpperThreshold} {measurement.Unit} ({value}).";
+                        if (value > suscription.UpperThreshold)
+                        {
+                            msg += $"{measurement.Name} is above {suscription.UpperThreshold} {measurement.Unit} ({value}).";
+                        }
                     }
-                }
 
-                if (msg != string.Empty)
-                {
-                    await _notificationService.NotifyAsync(msg, suscription.Email);
-                }
+                    if (msg != string.Empty)
+                    {
+                        await _notificationService.NotifyAsync(msg, suscription.Email);
+                    }
 
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
             }
         }
 
