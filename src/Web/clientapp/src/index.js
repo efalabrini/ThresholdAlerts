@@ -36,6 +36,20 @@ msalInstance.initialize().then(() => {
   });
 
   const root = ReactDOM.createRoot(document.getElementById('root'));
+
+  // Add the script to the head
+  const addScriptToHead = () => {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.text = `
+      console.log("This script is in the head!");
+    `;
+    document.head.prepend(script); // Ensure it's the first script in the head
+  };
+
+  // Call the function to add the script
+  addScriptToHead();
+
   root.render(
     <React.StrictMode>
       <ThemeProvider theme={theme}>
