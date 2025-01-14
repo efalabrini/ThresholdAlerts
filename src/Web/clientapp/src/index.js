@@ -41,28 +41,38 @@ msalInstance.initialize().then(() => {
   });
 
 //Implement Azure Insights
-const browserHistory = createBrowserHistory({ basename: '' });
-var reactPlugin = new ReactPlugin();
-// *** Add the Click Analytics plug-in. ***
-/* var clickPluginInstance = new ClickAnalyticsPlugin();
-   var clickPluginConfig = {
-     autoCapture: true
-}; */
-var appInsights = new ApplicationInsights({
-    config: {
-        connectionString: 'InstrumentationKey=6539562f-0da2-4d43-a576-af57eaffa209;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/;ApplicationId=6ba4c085-8bd9-4595-9e58-cc9863364e38',
-        // *** If you're adding the Click Analytics plug-in, delete the next line. ***
-        extensions: [reactPlugin],
-     // *** Add the Click Analytics plug-in. ***
-     // extensions: [reactPlugin, clickPluginInstance],
-        extensionConfig: {
-          [reactPlugin.identifier]: { history: browserHistory }
-       // *** Add the Click Analytics plug-in. ***
-       // [clickPluginInstance.identifier]: clickPluginConfig
+const appinsightsConnectionString = process.env.REACT_APP_THRESHOLDALERTS_APPINSIGHTS_CONNECTIONSTRING;
+//console.log('Application Insights Connection String:', appinsightsConnectionString);
+if (appinsightsConnectionString) {
+  try {
+    console.log('Start appinsight instrumentation');
+    const browserHistory = createBrowserHistory({ basename: '' });
+    var reactPlugin = new ReactPlugin();
+    // *** Add the Click Analytics plug-in. ***
+    /* var clickPluginInstance = new ClickAnalyticsPlugin();
+      var clickPluginConfig = {
+        autoCapture: true
+    }; */
+    var appInsights = new ApplicationInsights({
+        config: {
+            connectionString: appinsightsConnectionString,
+            // *** If you're adding the Click Analytics plug-in, delete the next line. ***
+            extensions: [reactPlugin],
+        // *** Add the Click Analytics plug-in. ***
+        // extensions: [reactPlugin, clickPluginInstance],
+            extensionConfig: {
+              [reactPlugin.identifier]: { history: browserHistory }
+          // *** Add the Click Analytics plug-in. ***
+          // [clickPluginInstance.identifier]: clickPluginConfig
+            }
         }
-    }
-});
-appInsights.loadAppInsights();
+    });
+    appInsights.loadAppInsights();
+    console.log('Finish appinsight instrumentation');
+  } catch (error) {
+    console.log('Error starting appinsight instrumentation:', error);
+  }
+}
 // End Azure Insights implementation
 
   const root = ReactDOM.createRoot(document.getElementById('root'));
