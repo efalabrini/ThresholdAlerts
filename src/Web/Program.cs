@@ -26,11 +26,10 @@ builder.Services.AddEndpointsApiExplorer();
 
 #region Swagger config
 //builder.Services.AddSwaggerGen();
-string instance = builder.Configuration["AzureAdB2C:Instance"]!;
-string tenantId = builder.Configuration["AzureAdB2C:TenantId"]!;
-string clientid = builder.Configuration["AzureAdB2C:ClientId"]!;
-//string ApplicationIdURI = $"api://{builder.Configuration["AzureAdB2C:ApplicationIdURI"]!}";
-string ApplicationIdURI = $"api://{tenantId}/{builder.Configuration["AzureAdB2C:ApplicationIdURI"]!}";
+string instance = builder.Configuration["AzureAd:Instance"]!;
+string tenantId = builder.Configuration["AzureAd:TenantId"]!;
+string clientid = builder.Configuration["AzureAd:ClientId"]!;
+string ApplicationIdURI = builder.Configuration["AzureAd:ApplicationIdURI"]!;
 string scope = "default";
 builder.Services.AddSwaggerGen(c =>
 {
@@ -48,7 +47,7 @@ builder.Services.AddSwaggerGen(c =>
                 TokenUrl = new Uri($"{instance}{tenantId}/oauth2/v2.0/token"),
                 Scopes = new Dictionary<string, string>
                 {
-                    { $"api://ThresholdAlertBackEnd/{scope}", "user Access API" }
+                    { $"{ApplicationIdURI}/{scope}", "Access API" }
                 }
             }
         }
@@ -65,34 +64,28 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "oauth2"
                 }
             },
-            new[] { $"api://ThresholdAlertBackEnd/{scope}" }
+            new[] { $"{ApplicationIdURI}/{scope}" }
         }
     });
 });
 #endregion
 
-
-
-// Adds Microsoft Identity platform (Azure AD B2C) support to protect this Api
-/*
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddMicrosoftIdentityWebApi(options =>
-        {
-            builder.Configuration.Bind("AzureAdB2C", options);
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
-            options.TokenValidationParameters.NameClaimType = "name";
-        },
-options => { builder.Configuration.Bind("AzureAdB2C", options); });
-*/
-// End of the Microsoft Identity platform block 
 
-builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAdB2C"));
-
+/*
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminAccess", policy =>
         policy.RequireClaim("jobTitle", "admin"));
+});
+*/
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminAccess", policy =>
+        policy.RequireClaim("name", "Emiliano Falabrini"));
 });
 
 
@@ -157,16 +150,16 @@ app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 #region Swagger pipeline config
-string spaClientId = builder.Configuration["AzureAdB2C:SpaClientId"]!;
+string spaClientId = builder.Configuration["AzureAd:SpaClientId"]!;
 app.UseSwagger();
-var oAuthRedirectUrl = builder.Configuration["AzureAdB2C:RedirectUri"];
+var oAuthRedirectUrl = builder.Configuration["AzureAd:RedirectUri"];
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
     c.OAuthClientId($"{spaClientId}");
     c.OAuthUsePkce();  // Recommended for B2C
     c.OAuth2RedirectUrl(oAuthRedirectUrl); // Same as the one registered in Azure B2C
-    c.OAuthScopes($"api://ThresholdAlertBackEnd/{scope}"); //Selects this scope by default.
+    c.OAuthScopes($"{ApplicationIdURI}/{scope}"); //Selects this scope by default.
 });
 #endregion
 
