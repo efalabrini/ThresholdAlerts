@@ -74,13 +74,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminAccess", policy =>
-        policy.RequireClaim("jobTitle", "admin"));
-});
-
-
 builder.Services.Configure<EmailNotificationServiceOptions>(
     builder.Configuration.GetSection(EmailNotificationServiceOptions.EmailNotificationService));
 

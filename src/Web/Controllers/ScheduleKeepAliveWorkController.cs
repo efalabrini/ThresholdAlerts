@@ -8,7 +8,7 @@ namespace Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AdminAccess")]
+    [Authorize(Roles = "admin")]
     public class ScheduleKeepAliveWorkController : ControllerBase
     {
         private readonly KeepAliveHostedService _keepAliveHostedService;

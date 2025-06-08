@@ -12,7 +12,7 @@ namespace Web.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Policy = "AdminAccess")]
+[Authorize(Roles = "admin")]
 public class MeasurementController : ControllerBase
 {
     private readonly IMeasurementService _measurementService;
