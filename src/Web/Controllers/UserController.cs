@@ -22,8 +22,9 @@ public class UserController : ControllerBase
     public ActionResult<List<SubscriptionDto>> GetForCurrentUser()
     {
         var claims = HttpContext.User.Claims;
-        var emailsClaim = claims.FirstOrDefault(c => c.Type == "emails")
-                ?? throw new AppValidationException("Emails claim can't be null");
+        Console.WriteLine($"Claims: {string.Join(", ", claims.Select(c => $"{c.Type}: {c.Value}"))}");
+        var emailsClaim = claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")
+                ?? throw new AppValidationException("Email claim can't be null");
         string email = emailsClaim.Value;
 
         return _subscriptionService.ListByEmail(email);
@@ -40,8 +41,8 @@ public class UserController : ControllerBase
     public ActionResult<SubscriptionDto> PutSubscription([FromQuery] int measurementId,[FromBody] PutSubscriptionRequest putSubscriptionRequest)
     {
         var claims = HttpContext.User.Claims;
-        var emailsClaim = claims.FirstOrDefault(c => c.Type == "emails")
-                ?? throw new AppValidationException("Emails claim can't be null");
+        var emailsClaim = claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")
+                ?? throw new AppValidationException("Email claim can't be null");
         string email = emailsClaim.Value;
 
         return SubscriptionDto.Create(_measurementService.PutSubscription(measurementId, email, putSubscriptionRequest));
@@ -51,8 +52,8 @@ public class UserController : ControllerBase
     public ActionResult DeleteSubscription([FromQuery] int measurementId)
     {
         var claims = HttpContext.User.Claims;
-        var emailsClaim = claims.FirstOrDefault(c => c.Type == "emails")
-                ?? throw new AppValidationException("Emails claim can't be null");
+        var emailsClaim = claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")
+                ?? throw new AppValidationException("Email claim can't be null");
         string email = emailsClaim.Value;
 
         _measurementService.DeleteSubscription(measurementId, email);

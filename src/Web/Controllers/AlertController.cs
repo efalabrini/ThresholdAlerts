@@ -23,7 +23,7 @@ public class AlertController : ControllerBase
     /// and creates a message if any of the threshold is surpased. If there is a message to send, notifies the suscriber.
     /// </summary>
     /// <returns></returns>
-    [Authorize(Policy = "AdminAccess")]
+    [Authorize(Roles = "admin")]
     [HttpPost]
     public IActionResult Alert()
     {
