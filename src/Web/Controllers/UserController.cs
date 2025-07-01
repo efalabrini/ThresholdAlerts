@@ -41,7 +41,7 @@ public class UserController : ControllerBase
     public ActionResult<SubscriptionDto> PutSubscription([FromQuery] int measurementId,[FromBody] PutSubscriptionRequest putSubscriptionRequest)
     {
         var claims = HttpContext.User.Claims;
-        var emailsClaim = claims.FirstOrDefault(c => c.Type == "email")
+        var emailsClaim = claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")
                 ?? throw new AppValidationException("Email claim can't be null");
         string email = emailsClaim.Value;
 
@@ -52,7 +52,7 @@ public class UserController : ControllerBase
     public ActionResult DeleteSubscription([FromQuery] int measurementId)
     {
         var claims = HttpContext.User.Claims;
-        var emailsClaim = claims.FirstOrDefault(c => c.Type == "email")
+        var emailsClaim = claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")
                 ?? throw new AppValidationException("Email claim can't be null");
         string email = emailsClaim.Value;
 
