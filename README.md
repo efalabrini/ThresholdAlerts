@@ -48,6 +48,7 @@ classDiagram
 
 # Deploy
 [Feel free to try the Web API on Azure](https://thresholdalerts-d5cwedg3awhwcuee.eastus-01.azurewebsites.net/swagger) 
+[React front-end](https://jolly-island-040105210.6.azurestaticapps.net/)
 
 
 # Resources
