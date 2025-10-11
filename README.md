@@ -103,3 +103,9 @@ dotnet ef migrations add InitialMigration --context ApplicationDbContext --start
 ```
 dotnet ef database update --context ApplicationDbContext --startup-project src/Web --project src/Infrastructure
 ```
+
+## Microsoft.Identity config
+### Install
+```
+dotnet add package Microsoft.Identity.Web
+```
