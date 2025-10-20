@@ -60,7 +60,7 @@ classDiagram
 
 [CI/CD de una NET Web API en Azure con Github actions.](https://youtu.be/9s2GDa4Uj1k?si=2grLUnSkHu-fC1F4)
 
-[Implementando Microsoft Entra External ID en una Web API ASP.NET desde cero ](https://youtu.be/MKGIKcCpQ0o?si=8zYJyz8YEO6gtDzv)
+[Entra External ID en una ASP NET Web API integrado con Swagger](https://youtu.be/MKGIKcCpQ0o?si=8zYJyz8YEO6gtDzv)
 
 [Azure B2C en una ASP NET Web API integrado con Swagger](https://youtu.be/sJQ3kBZfFPc?si=bS6qqo8dNSqJcoig)
 
