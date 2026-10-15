@@ -103,7 +103,7 @@ namespace Core.Middlewares
                     Status = statusCode,
                     Type = "Server error",
                     Title = "Server error",
-                    Detail = ex.Message
+                    Detail = "An internal server"
                 };
 
                 string json = JsonSerializer.Serialize(problem);
